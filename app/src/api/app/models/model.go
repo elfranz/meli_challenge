@@ -9,8 +9,8 @@ type Item struct {
 
 // ItemServiceInterface ...
 type ItemServiceInterface interface {
-	Item(id string) (*Item, error)
-	Items() ([]*Item, error)
+	GetItem(id string) (*Item, error)
+	GetItems() ([]Item, error)
 	CreateItem(i *Item) error
 	DeleteItem(id string) error
 }

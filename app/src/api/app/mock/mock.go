@@ -4,11 +4,11 @@ import "api/app/models"
 
 // ItemService ...
 type ItemService struct {
-	ItemFn      func(id string) (*models.Item, error)
-	ItemInvoked bool
+	GetItemFn      func(id string) (*models.Item, error)
+	GetItemInvoked bool
 
-	ItemsFn      func() ([]*models.Item, error)
-	ItemsInvoked bool
+	GetItemsFn      func() ([]models.Item, error)
+	GetItemsInvoked bool
 
 	CreateItemFn      func(i *models.Item) error
 	CreateItemInvoked bool
@@ -18,15 +18,15 @@ type ItemService struct {
 }
 
 // Item ...
-func (is *ItemService) Item(id string) (*models.Item, error) {
-	is.ItemInvoked = true
-	return is.ItemFn(id)
+func (is *ItemService) GetItem(id string) (*models.Item, error) {
+	is.GetItemInvoked = true
+	return is.GetItemFn(id)
 }
 
-// Items ...
-func (is *ItemService) Items() ([]*models.Item, error) {
-	is.ItemsInvoked = true
-	return is.ItemsFn()
+// GetItems ...
+func (is *ItemService) GetItems() ([]models.Item, error) {
+	is.GetItemsInvoked = true
+	return is.GetItemsFn()
 }
 
 // CreateItem ...
