@@ -11,6 +11,7 @@ import (
 	"api/app/models"
 
 	"github.com/gin-gonic/gin"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestHandler(t *testing.T) {
@@ -53,13 +54,9 @@ func TestHandler(t *testing.T) {
 	router.ServeHTTP(w, r)
 
 	// Validate mock.
-	if !is.GetItemInvoked {
-		t.Fatal("expected Item() to be invoked")
-	}
+	assert.Equal(t, true, is.GetItemInvoked, "expected GetItem() to be invoked")
 
-	if w.Code != http.StatusOK {
-		t.Fatal("expected ok status")
-	}
+	assert.Equal(t, 200, w.Code, "status should be 200")
 
 	// get items
 
@@ -67,13 +64,9 @@ func TestHandler(t *testing.T) {
 	router.ServeHTTP(w, s)
 
 	// Validate mock.
-	if !is.GetItemsInvoked {
-		t.Fatal("expected Item() to be invoked")
-	}
+	assert.Equal(t, true, is.GetItemsInvoked, "expected GetItems() to be invoked")
 
-	if w.Code != http.StatusOK {
-		t.Fatal("expected ok status")
-	}
+	assert.Equal(t, 200, w.Code, "status should be 200")
 
 	// create items
 	payload := fmt.Sprintf(
@@ -87,13 +80,9 @@ func TestHandler(t *testing.T) {
 	router.ServeHTTP(w, u)
 
 	// Validate mock.
-	if !is.CreateItemInvoked {
-		t.Fatal("expectedItem() to be invoked")
-	}
+	assert.Equal(t, true, is.CreateItemInvoked, "expected CreateItem() to be invoked")
 
-	if w.Code != http.StatusCreated {
-		t.Fatal("expected created status")
-	}
+	assert.Equal(t, 201, w.Code, "status should be 201")
 
 	// delete items
 
@@ -101,11 +90,7 @@ func TestHandler(t *testing.T) {
 	router.ServeHTTP(w, v)
 
 	// Validate mock.
-	if !is.DeleteItemInvoked {
-		t.Fatal("expected Item() to be invoked")
-	}
+	assert.Equal(t, true, is.DeleteItemInvoked, "expected DeleteItem() to be invoked")
 
-	if w.Code != http.StatusOK {
-		t.Fatal("expected ok status")
-	}
+	assert.Equal(t, 200, w.Code, "status should be 200")
 }
