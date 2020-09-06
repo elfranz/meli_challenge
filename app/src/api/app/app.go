@@ -33,7 +33,7 @@ func configDataBase() *sql.DB {
 	os.Remove("./foo.db")
 	// db, err := sql.Open("mysql", "./foo.db")
 	// TODO: Configure this, i'm behind on the tests right now
-	db, err := sql.Open("mysql", fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8", "user", "userpwd", "db", "db"))
+	db, err := sql.Open("mysql", fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8", os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_CONTAINER_NAME"), os.Getenv("DB_NAME")))
 	if err != nil {
 		panic("Could not connect to the db")
 	}

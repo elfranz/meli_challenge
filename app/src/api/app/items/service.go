@@ -43,6 +43,12 @@ func (s *ItemService) GetItems() ([]models.Item, error) {
 	if err := rows.Err(); err != nil {
 		log.Fatal(err)
 	}
+
+	// Set items to empty array if no items are found so the endpoint does not return "null".
+	// I don't know if this is the best solution...
+	if len(items) == 0 {
+		items = []models.Item{}
+	}
 	return items, nil
 }
 

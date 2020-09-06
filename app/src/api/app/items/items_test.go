@@ -73,8 +73,8 @@ func TestGetItems(t *testing.T) {
 	}
 
 	w := httptest.NewRecorder()
-	s, _ := http.NewRequest("GET", "/item", nil)
-	router.ServeHTTP(w, s)
+	r, _ := http.NewRequest("GET", "/item", nil)
+	router.ServeHTTP(w, r)
 
 	// Validate mock.
 	assert.Equal(t, true, is.GetItemsInvoked, "expected GetItems() to be invoked")
@@ -104,8 +104,9 @@ func TestCreateItem(t *testing.T) {
 	)
 
 	w := httptest.NewRecorder()
-	u, _ := http.NewRequest("POST", "/item", strings.NewReader(payload))
-	router.ServeHTTP(w, u)
+	r, _ := http.NewRequest("POST", "/item", strings.NewReader(payload))
+	r.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	router.ServeHTTP(w, r)
 
 	// Validate mock.
 	assert.Equal(t, true, is.CreateItemInvoked, "expected CreateItem() to be invoked")
@@ -118,11 +119,15 @@ func TestCreateItem(t *testing.T) {
 	err := json.Unmarshal([]byte(w.Body.String()), &response)
 	// Grab the value & whether or not it exists
 	// id := response["id"]
+	for key, value := range response {
+		fmt.Print(key)
+		fmt.Println("-" + value)
+	}
 	name := response["name"]
 	description := response["description"]
 	// Make some assertions on the correctness of the response.
 	assert.Nil(t, err)
-	// assert.Equal(t, "4", id) WHY ON EARTH IS THIS KEY NIL???
+	// assert.Equal(t, "1", id) WHY ON EARTH IS THIS KEY NIL???
 	assert.Equal(t, "Pepe", name)
 	assert.Equal(t, "This is an Example", description)
 }
@@ -144,8 +149,9 @@ func TestDeleteItem(t *testing.T) {
 	// delete items
 
 	w := httptest.NewRecorder()
-	v, _ := http.NewRequest("DELETE", "/item/100", nil)
-	router.ServeHTTP(w, v)
+	r, _ := http.NewRequest("DELETE", "/item/100", nil)
+	r.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	router.ServeHTTP(w, r)
 
 	// Validate mock.
 	assert.Equal(t, true, is.DeleteItemInvoked, "expected DeleteItem() to be invoked")

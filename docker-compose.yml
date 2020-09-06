@@ -13,6 +13,11 @@ services:
       - "8080"
     depends_on:
       - db
+    environment:
+      - DB_USER=user
+      - DB_PASSWORD=userpwd
+      - DB_CONTAINER_NAME=db
+      - DB_NAME=db
 
   db:
     image: "mysql:5.7"
