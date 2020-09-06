@@ -44,7 +44,7 @@ func configDataBase() *sql.DB {
 			time.Sleep(1 * time.Second)
 			continue
 		}
-		// This is bad practice... You should create a schema.sql with all the definitions
+		// TODO: This is bad practice... You should create a schema.sql with all the definitions
 		createTable(db)
 		return db
 	}

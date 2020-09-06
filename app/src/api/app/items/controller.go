@@ -19,7 +19,7 @@ func GetItem(c *gin.Context) {
 
 	item, err := Is.GetItem(itemID)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "find_error", "description": err.Error()})
+		c.JSON(http.StatusNotFound, gin.H{"error": "find_error", "description": err.Error()})
 		return
 	}
 	c.JSON(200, item)
@@ -50,6 +50,7 @@ func PostItem(c *gin.Context) {
 		return
 	}
 	c.JSON(201, i)
+	return
 }
 
 // DeleteItem ...
@@ -60,7 +61,13 @@ func DeleteItem(c *gin.Context) {
 		return
 	}
 
-	Is.DeleteItem(itemID)
-	c.JSON(200, itemID)
+	err := Is.DeleteItem(itemID)
+
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "find_error", "description": err.Error()})
+		return
+	}
+
+	c.JSON(200, gin.H{"message": "Item successfully deleted."})
 	return
 }

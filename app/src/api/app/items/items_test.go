@@ -2,6 +2,7 @@ package items
 
 import (
 	"api/app/mock"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
@@ -14,7 +15,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestHandler(t *testing.T) {
+func TestGetItem(t *testing.T) {
 	router := gin.Default()
 	Configure(router, nil)
 
@@ -30,24 +31,6 @@ func TestHandler(t *testing.T) {
 		return &models.Item{ID: "100", Name: "DaItam", Description: "Elnesto"}, nil
 	}
 
-	is.GetItemsFn = func() ([]models.Item, error) {
-		return []models.Item{
-			models.Item{ID: "100", Name: "DaItam", Description: "Elnesto"},
-			models.Item{ID: "101", Name: "Pepe", Description: "This is an example."},
-		}, nil
-	}
-
-	is.CreateItemFn = func(i *models.Item) error {
-		return nil
-	}
-
-	is.DeleteItemFn = func(id string) error {
-		if id != "100" {
-			t.Fatalf("unexpected id: %s", id)
-		}
-		return nil
-	}
-
 	// Invoke the handler.
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("GET", "/item/100", nil)
@@ -56,10 +39,40 @@ func TestHandler(t *testing.T) {
 	// Validate mock.
 	assert.Equal(t, true, is.GetItemInvoked, "expected GetItem() to be invoked")
 
+	// assert response code
 	assert.Equal(t, 200, w.Code, "status should be 200")
 
-	// get items
+	// assert response body
+	// Convert the JSON response to a map
+	var response map[string]string
+	err := json.Unmarshal([]byte(w.Body.String()), &response)
+	// Grab the value & whether or not it exists
+	id := response["id"]
+	name := response["name"]
+	description := response["description"]
+	// Make some assertions on the correctness of the response.
+	assert.Nil(t, err)
+	assert.Equal(t, "100", id)
+	assert.Equal(t, "DaItam", name)
+	assert.Equal(t, "Elnesto", description)
+}
 
+func TestGetItems(t *testing.T) {
+	router := gin.Default()
+	Configure(router, nil)
+
+	// Inject our mock into our handler.
+	var is mock.ItemService
+	Is = &is
+
+	is.GetItemsFn = func() ([]models.Item, error) {
+		return []models.Item{
+			models.Item{ID: "100", Name: "DaItam", Description: "Elnesto"},
+			models.Item{ID: "101", Name: "Pepe", Description: "This is an example."},
+		}, nil
+	}
+
+	w := httptest.NewRecorder()
 	s, _ := http.NewRequest("GET", "/item", nil)
 	router.ServeHTTP(w, s)
 
@@ -68,7 +81,21 @@ func TestHandler(t *testing.T) {
 
 	assert.Equal(t, 200, w.Code, "status should be 200")
 
-	// create items
+	// TODO: TEST RESPONSE ARRAY
+}
+
+func TestCreateItem(t *testing.T) {
+	router := gin.Default()
+	Configure(router, nil)
+
+	// Inject our mock into our handler.
+	var is mock.ItemService
+	Is = &is
+
+	is.CreateItemFn = func(i *models.Item) error {
+		return nil
+	}
+
 	payload := fmt.Sprintf(
 		`{
 			"name": "Pepe",
@@ -76,6 +103,7 @@ func TestHandler(t *testing.T) {
 		}`,
 	)
 
+	w := httptest.NewRecorder()
 	u, _ := http.NewRequest("POST", "/item", strings.NewReader(payload))
 	router.ServeHTTP(w, u)
 
@@ -84,8 +112,38 @@ func TestHandler(t *testing.T) {
 
 	assert.Equal(t, 201, w.Code, "status should be 201")
 
+	// assert response body
+	// Convert the JSON response to a map
+	var response map[string]string
+	err := json.Unmarshal([]byte(w.Body.String()), &response)
+	// Grab the value & whether or not it exists
+	// id := response["id"]
+	name := response["name"]
+	description := response["description"]
+	// Make some assertions on the correctness of the response.
+	assert.Nil(t, err)
+	// assert.Equal(t, "4", id) WHY ON EARTH IS THIS KEY NIL???
+	assert.Equal(t, "Pepe", name)
+	assert.Equal(t, "This is an Example", description)
+}
+
+func TestDeleteItem(t *testing.T) {
+	router := gin.Default()
+	Configure(router, nil)
+
+	// Inject our mock into our handler.
+	var is mock.ItemService
+	Is = &is
+
+	is.DeleteItemFn = func(id string) error {
+		if id != "100" {
+			t.Fatalf("unexpected id: %s", id)
+		}
+		return nil
+	}
 	// delete items
 
+	w := httptest.NewRecorder()
 	v, _ := http.NewRequest("DELETE", "/item/100", nil)
 	router.ServeHTTP(w, v)
 
@@ -93,4 +151,14 @@ func TestHandler(t *testing.T) {
 	assert.Equal(t, true, is.DeleteItemInvoked, "expected DeleteItem() to be invoked")
 
 	assert.Equal(t, 200, w.Code, "status should be 200")
+
+	// assert response body
+	// Convert the JSON response to a map
+	var response map[string]string
+	err := json.Unmarshal([]byte(w.Body.String()), &response)
+	// Grab the value & whether or not it exists
+	message := response["message"]
+	// Make some assertions on the correctness of the response.
+	assert.Nil(t, err)
+	assert.Equal(t, "Item successfully deleted.", message)
 }
