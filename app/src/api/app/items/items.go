@@ -17,7 +17,7 @@ func Configure(r *gin.Engine, db *sql.DB) {
 	Is = &ItemService{DB: db}
 
 	r.GET("/item/:id", GetItem)
-	r.POST("/item", PostItem)
+	r.POST("/item", CreateItem)
 	r.DELETE("/item/:id", DeleteItem)
 	r.GET("/item", GetItems)
 }

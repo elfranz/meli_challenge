@@ -37,8 +37,8 @@ func GetItems(c *gin.Context) {
 	return
 }
 
-// PostItem ...
-func PostItem(c *gin.Context) {
+// CreateItem ...
+func CreateItem(c *gin.Context) {
 	i := &models.Item{}
 	if err := c.BindJSON(i); c.Request.ContentLength == 0 || err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "bind_error", "description": err.Error()})
