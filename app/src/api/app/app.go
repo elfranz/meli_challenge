@@ -7,10 +7,10 @@ import (
 	"os"
 	"time"
 
-	"github.com/gin-gonic/gin"
-	// Needed to sql lite 3
-	// _ "github.com/mattn/go-sqlite3"
+	// handles sql file for schema file
 	"github.com/gchaincl/dotsql"
+	// web framework
+	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 )
 
@@ -31,10 +31,8 @@ func StartApp() {
 }
 
 func configDataBase() *sql.DB {
-	os.Remove("./foo.db")
-	// db, err := sql.Open("mysql", "./foo.db")
-	// TODO: Configure this, i'm behind on the tests right now
-	db, err := sql.Open("mysql", fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8", os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_CONTAINER_NAME"), os.Getenv("DB_NAME")))
+	dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8", os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_CONTAINER_NAME"), os.Getenv("DB_NAME"))
+	db, err := sql.Open("mysql", dsn)
 	if err != nil {
 		panic("Could not connect to the db")
 	}
@@ -42,7 +40,10 @@ func configDataBase() *sql.DB {
 	for {
 		err := db.Ping()
 		if err != nil {
+			// added this print so we see if the db is stuck
+			fmt.Println("Waiting for db...")
 			time.Sleep(1 * time.Second)
+			// skips iteration if database does not respond
 			continue
 		}
 		loadSchema(db)
