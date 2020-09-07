@@ -19,11 +19,9 @@ func TestGetItem(t *testing.T) {
 	router := gin.Default()
 	Configure(router, nil)
 
-	// Inject our mock into our handler.
 	var is mock.ItemService
 	Is = &is
 
-	// Define mocks.
 	is.GetItemFn = func(id string) (*models.Item, error) {
 		if id != "100" {
 			t.Fatalf("unexpected id: %s", id)
@@ -31,7 +29,6 @@ func TestGetItem(t *testing.T) {
 		return &models.Item{ID: "100", Name: "DaItam", Description: "Elnesto"}, nil
 	}
 
-	// Invoke the handler.
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("GET", "/item/100", nil)
 	router.ServeHTTP(w, r)
@@ -61,7 +58,6 @@ func TestGetItems(t *testing.T) {
 	router := gin.Default()
 	Configure(router, nil)
 
-	// Inject our mock into our handler.
 	var is mock.ItemService
 	Is = &is
 
@@ -76,10 +72,14 @@ func TestGetItems(t *testing.T) {
 	r, _ := http.NewRequest("GET", "/item", nil)
 	router.ServeHTTP(w, r)
 
-	// Validate mock.
 	assert.Equal(t, true, is.GetItemsInvoked, "expected GetItems() to be invoked")
 
 	assert.Equal(t, 200, w.Code, "status should be 200")
+
+	// var response []string
+	// _ = json.Unmarshal([]byte(dataJson), &response)
+	// log.Printf("Unmarshaled: %v", response)
+	// slice is empty
 }
 
 func TestCreateItem(t *testing.T) {
@@ -106,7 +106,6 @@ func TestCreateItem(t *testing.T) {
 	r.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	router.ServeHTTP(w, r)
 
-	// Validate mock.
 	assert.Equal(t, true, is.CreateItemInvoked, "expected CreateItem() to be invoked")
 
 	assert.Equal(t, 201, w.Code, "status should be 201")
@@ -117,6 +116,10 @@ func TestCreateItem(t *testing.T) {
 	err := json.Unmarshal([]byte(w.Body.String()), &response)
 	// Grab the value & whether or not it exists
 	// id := response["id"]
+	for key, value := range response {
+		fmt.Print(key)
+		fmt.Println("-" + value)
+	}
 	name := response["name"]
 	description := response["description"]
 	// Make some assertions on the correctness of the response.
@@ -130,7 +133,6 @@ func TestDeleteItem(t *testing.T) {
 	router := gin.Default()
 	Configure(router, nil)
 
-	// Inject our mock into our handler.
 	var is mock.ItemService
 	Is = &is
 
@@ -140,14 +142,12 @@ func TestDeleteItem(t *testing.T) {
 		}
 		return nil
 	}
-	// delete items
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("DELETE", "/item/100", nil)
 	r.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	router.ServeHTTP(w, r)
 
-	// Validate mock.
 	assert.Equal(t, true, is.DeleteItemInvoked, "expected DeleteItem() to be invoked")
 
 	assert.Equal(t, 200, w.Code, "status should be 200")
