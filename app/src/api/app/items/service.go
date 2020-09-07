@@ -44,7 +44,7 @@ func (s *ItemService) GetItems() ([]models.Item, error) {
 		log.Fatal(err)
 	}
 
-	// Set items to empty array if no items are found so the endpoint does not return "null".
+	// Set items to empty slice if no items are found so the endpoint does not return "null".
 	// I don't know if this is the best solution...
 	if len(items) == 0 {
 		items = []models.Item{}

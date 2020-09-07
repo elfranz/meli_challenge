@@ -81,7 +81,7 @@ func TestGetItems(t *testing.T) {
 
 	assert.Equal(t, 200, w.Code, "status should be 200")
 
-	// TODO: TEST RESPONSE ARRAY
+	// TODO: TEST RESPONSE SLICE
 }
 
 func TestCreateItem(t *testing.T) {
