@@ -10,6 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 	// Needed to sql lite 3
 	// _ "github.com/mattn/go-sqlite3"
+	"github.com/gchaincl/dotsql"
 	_ "github.com/go-sql-driver/mysql"
 )
 
@@ -44,24 +45,20 @@ func configDataBase() *sql.DB {
 			time.Sleep(1 * time.Second)
 			continue
 		}
-		// TODO: This is bad practice... You should create a schema.sql with all the definitions
-		createTable(db)
+		loadSchema(db)
 		return db
 	}
 
 }
 
-func createTable(db *sql.DB) {
-	// create table if not exists
-	sqlTable := `
-	CREATE TABLE IF NOT EXISTS items(
-		id MEDIUMINT(11) NOT NULL AUTO_INCREMENT,
-		name CHAR(30),
-		description TEXT,
-		PRIMARY KEY (id)
-	);`
-	_, err := db.Exec(sqlTable)
+func loadSchema(db *sql.DB) {
+	dot, err := dotsql.LoadFromFile("src/api/app/db/schema.sql")
 	if err != nil {
-		panic(err)
+		panic("Could not load database schema file")
+	}
+	res, loaderr := dot.Exec(db, "load-schema")
+	_ = res
+	if loaderr != nil {
+		panic("Could not load schema")
 	}
 }
