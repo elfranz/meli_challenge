@@ -12,7 +12,7 @@ git clone https://github.com/elfranz/meli_challenge
 
 ## Usage
 
-[POSTMAN DOCUMENTATION](https://documenter.getpostman.com/view/11207309/TVCiT6m9)
+* Read the [Postman docs](https://documenter.getpostman.com/view/11207309/TVCiT6m9) for information on how to invoke the different endpoints.
 
 * Change to the created directory
 ```
