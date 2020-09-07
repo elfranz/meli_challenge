@@ -1,6 +1,7 @@
 # meli_challenge
 
 Welcome! This is a challenge for Mercadolibre.
+You can read about the development of this app on https://docs.google.com/document/d/1qNNp9GIijiL8KNwgjoOHmjyt6VaHal300Mc7DpgM1f0/edit?usp=sharing.
 
 ## Installation
 
