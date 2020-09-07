@@ -12,7 +12,7 @@ git clone https://github.com/elfranz/meli_challenge
 
 ## Usage
 
-[POSTMAN DOCUMENTATION](https://documenter.getpostman.com/view/11207309/TVCiT6m9)
+* Read the [Postman docs](https://documenter.getpostman.com/view/11207309/TVCiT6m9) for information on how to invoke the different endpoints.
 
 * Change to the created directory
 ```
@@ -47,3 +47,8 @@ go test
 * Make sure the containers are up, you can do ```docker-compose ps -a``` on your terminal to list the active processes, you should see the three containers up (db, nginx and app).
 
 * Run the whole regression by running the collection in your postman client. To do this click on the arrow on the imported collection, then RUN and then RUN again.
+
+## Additional
+
+You can read about the development of this app on https://docs.google.com/document/d/1qNNp9GIijiL8KNwgjoOHmjyt6VaHal300Mc7DpgM1f0/edit?usp=sharing.
+This was a really fun and elightening experience, it took me out of Ruby's comfort zone and challenged me to expand my knowledge about infrastructure and programming. I learned a lot about Go and Nginx in very little time so in general it was very positive despite the anxiety and stress the unit testing gave me :grin:.
