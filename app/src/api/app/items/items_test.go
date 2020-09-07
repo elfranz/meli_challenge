@@ -80,8 +80,6 @@ func TestGetItems(t *testing.T) {
 	assert.Equal(t, true, is.GetItemsInvoked, "expected GetItems() to be invoked")
 
 	assert.Equal(t, 200, w.Code, "status should be 200")
-
-	// TODO: TEST RESPONSE SLICE
 }
 
 func TestCreateItem(t *testing.T) {
@@ -119,10 +117,6 @@ func TestCreateItem(t *testing.T) {
 	err := json.Unmarshal([]byte(w.Body.String()), &response)
 	// Grab the value & whether or not it exists
 	// id := response["id"]
-	for key, value := range response {
-		fmt.Print(key)
-		fmt.Println("-" + value)
-	}
 	name := response["name"]
 	description := response["description"]
 	// Make some assertions on the correctness of the response.
